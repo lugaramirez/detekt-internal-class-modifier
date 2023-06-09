@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test
 internal class MyRuleTest(private val env: KotlinCoreEnvironment) {
 
     @Test
-    fun `reports inner classes`() {
+    fun `reports top non-internal classes`() {
         val code = """
         class A {
-          inner class B
+          class B
         }
         """
         val findings = MyRule(Config.empty).compileAndLintWithContext(env, code)
@@ -22,9 +22,9 @@ internal class MyRuleTest(private val env: KotlinCoreEnvironment) {
     }
 
     @Test
-    fun `doesn't report inner classes`() {
+    fun `doesn't report top internal classes`() {
         val code = """
-        class A {
+        internal class A {
           class B
         }
         """

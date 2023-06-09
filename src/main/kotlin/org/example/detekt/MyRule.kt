@@ -7,21 +7,21 @@ import io.gitlab.arturbosch.detekt.api.Entity
 import io.gitlab.arturbosch.detekt.api.Issue
 import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
+import io.gitlab.arturbosch.detekt.rules.isInternal
 import org.jetbrains.kotlin.psi.KtClass
 
 class MyRule(config: Config) : Rule(config) {
     override val issue = Issue(
         javaClass.simpleName,
-        Severity.CodeSmell,
-        "Custom Rule",
+        Severity.Style,
+        "Classes should have the internal modifier.",
         Debt.FIVE_MINS,
     )
 
     override fun visitClass(klass: KtClass) {
-        super.visitClass(klass)
+        println("Class ${klass.nameAsSafeName} visited.")
 
-        if (klass.isInner()) {
-            report(CodeSmell(issue, Entity.atName(klass), "Custom message"))
-        }
+        if (klass.isInternal()) return
+        else report(CodeSmell(issue, Entity.atName(klass), "Class ${klass.nameAsSafeName} should have the 'internal' modifier."))
     }
 }
